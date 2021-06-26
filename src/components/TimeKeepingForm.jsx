@@ -1,14 +1,21 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
-function TimeKeepingForm(){
+function TimeKeepingForm(props){
 
   const currentTime = new Date().toLocaleTimeString();
   const [clockTime, setClockTime] = useState(currentTime);
+
+  useEffect(()=> {
+      const interval = setInterval(() => setClockTime(new Date().toLocaleTimeString()), 1000);
+      return (() => {
+        clearInterval(interval)
+      });
+    }, []);
 
   return(
     <Card>
@@ -18,14 +25,19 @@ function TimeKeepingForm(){
             Username
           </Form.Label>
           <Col sm="10">
-            <Form.Control plaintext readOnly defaultValue="email@example.com" />
+            <Form.Control plaintext readOnly defaultValue="bertcanoiii" />
           </Col>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Current Time</Form.Label>
           <Form.Control type="text" placeholder="" value={clockTime} />
         </Form.Group>
-        <Button variant="primary" type="submit">
+        <Button
+          onClick={()=>{
+            props.onAdd(clockTime);
+          }}
+          variant="primary"
+        >
           Clock-In
         </Button>
       </Form>
